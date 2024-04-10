@@ -1,34 +1,25 @@
+
 library(shiny)
+library(shinyWidgets)
+library(wordcloud2)
 
 ui <- fluidPage(
-  
-  titlePanel(title = "Interactive correlation plots"),
-  
+  titlePanel("Reddit Gender Discourse Analysis"),
   sidebarLayout(
-    
     sidebarPanel(
-      
-      selectInput(inputId = "var_x",
-                  label = "Select X:",
-                  choices = colnames(data)[-2]),
-      
-      selectInput(inputId = "var_y",
-                  label = "Select Y:",
-                  choices = rev(colnames(data)[-2])),
-      
-      selectInput(inputId = "var_z",
-                  label = "Select variable for color:",
-                  choices = colnames(data)[-1]),
+      selectInput("subreddit", "Choose a Subreddit:", 
+                  choices = c("Feminism", "TwoXChromosomes", "AskWomen", 
+                              "TheRedPill", "MensRights", "AskMen", "MensLib",
+                              "news", "worldnews", "AskReddit")),
+      actionButton("goButton", "Analyze", icon = icon("search"))
     ),
     mainPanel(
-      
-      plotOutput("correlation_plot"),
-      
-      tableOutput("data_head"),
-      
-      textOutput("correlation")
-      
-      
+      tabsetPanel(type = "tabs",
+                  tabPanel("Summary", verbatimTextOutput("summaryOutput")),
+                  tabPanel("Word Cloud", htmlOutput("wordCloudOutput")),
+                  tabPanel("Sentiment Analysis", plotOutput("sentimentPlot"))
+      )
     )
   )
 )
+
